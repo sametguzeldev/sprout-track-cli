@@ -23,13 +23,21 @@ import { registerFamilyCommands } from './commands/family.js';
 import { registerUnitsCommands } from './commands/units.js';
 import { error } from './output/index.js';
 import { formatError } from './utils/errors.js';
+import { enableVerbose } from './utils/logger.js';
 
 const program = new Command();
 
 program
   .name('sprout-track')
   .description('Command-line interface for Sprout-Track baby tracking')
-  .version('1.0.0');
+  .version('1.0.0')
+  .option('-v, --verbose', 'Enable verbose debug output')
+  .hook('preAction', (thisCommand) => {
+    const opts = thisCommand.opts();
+    if (opts.verbose) {
+      enableVerbose();
+    }
+  });
 
 // Register all command groups
 registerConfigCommands(program);

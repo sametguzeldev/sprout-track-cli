@@ -74,7 +74,7 @@ export async function getBabies(params?: { active?: boolean }): Promise<BabyResp
 
 export async function getBaby(id: string): Promise<BabyResponse> {
   requireAuth();
-  return get<BabyResponse>(`/api/baby/${id}`);
+  return get<BabyResponse>('/api/baby', { id });
 }
 
 export async function createBaby(data: BabyCreate): Promise<BabyResponse> {
@@ -109,7 +109,7 @@ export async function getFeedLogs(params: {
 
 export async function getFeedLog(id: string): Promise<FeedLogResponse> {
   requireAuth();
-  return get<FeedLogResponse>(`/api/feed-log/${id}`);
+  return get<FeedLogResponse>('/api/feed-log', { id });
 }
 
 export async function createFeedLog(data: FeedLogCreate): Promise<FeedLogResponse> {
@@ -142,7 +142,7 @@ export async function getSleepLogs(params: {
 
 export async function getSleepLog(id: string): Promise<SleepLogResponse> {
   requireAuth();
-  return get<SleepLogResponse>(`/api/sleep-log/${id}`);
+  return get<SleepLogResponse>('/api/sleep-log', { id });
 }
 
 export async function createSleepLog(data: SleepLogCreate): Promise<SleepLogResponse> {
@@ -175,7 +175,7 @@ export async function getDiaperLogs(params: {
 
 export async function getDiaperLog(id: string): Promise<DiaperLogResponse> {
   requireAuth();
-  return get<DiaperLogResponse>(`/api/diaper-log/${id}`);
+  return get<DiaperLogResponse>('/api/diaper-log', { id });
 }
 
 export async function createDiaperLog(data: DiaperLogCreate): Promise<DiaperLogResponse> {
@@ -208,7 +208,7 @@ export async function getNotes(params: {
 
 export async function getNote(id: string): Promise<NoteResponse> {
   requireAuth();
-  return get<NoteResponse>(`/api/note/${id}`);
+  return get<NoteResponse>('/api/note', { id });
 }
 
 export async function createNote(data: NoteCreate): Promise<NoteResponse> {
@@ -241,7 +241,7 @@ export async function getBathLogs(params: {
 
 export async function getBathLog(id: string): Promise<BathLogResponse> {
   requireAuth();
-  return get<BathLogResponse>(`/api/bath-log/${id}`);
+  return get<BathLogResponse>('/api/bath-log', { id });
 }
 
 export async function createBathLog(data: BathLogCreate): Promise<BathLogResponse> {
@@ -274,7 +274,7 @@ export async function getPumpLogs(params: {
 
 export async function getPumpLog(id: string): Promise<PumpLogResponse> {
   requireAuth();
-  return get<PumpLogResponse>(`/api/pump-log/${id}`);
+  return get<PumpLogResponse>('/api/pump-log', { id });
 }
 
 export async function createPumpLog(data: PumpLogCreate): Promise<PumpLogResponse> {
@@ -306,7 +306,7 @@ export async function getMilestones(params: {
 
 export async function getMilestone(id: string): Promise<MilestoneResponse> {
   requireAuth();
-  return get<MilestoneResponse>(`/api/milestone/${id}`);
+  return get<MilestoneResponse>('/api/milestone', { id });
 }
 
 export async function createMilestone(data: MilestoneCreate): Promise<MilestoneResponse> {
@@ -338,7 +338,7 @@ export async function getMeasurements(params: {
 
 export async function getMeasurement(id: string): Promise<MeasurementResponse> {
   requireAuth();
-  return get<MeasurementResponse>(`/api/measurement/${id}`);
+  return get<MeasurementResponse>('/api/measurement', { id });
 }
 
 export async function createMeasurement(data: MeasurementCreate): Promise<MeasurementResponse> {
@@ -367,7 +367,7 @@ export async function getMedicines(params?: { active?: boolean }): Promise<Medic
 
 export async function getMedicine(id: string): Promise<MedicineResponse> {
   requireAuth();
-  return get<MedicineResponse>(`/api/medicine/${id}`);
+  return get<MedicineResponse>('/api/medicine', { id });
 }
 
 export async function createMedicine(data: MedicineCreate): Promise<MedicineResponse> {
@@ -401,7 +401,7 @@ export async function getMedicineLogs(params: {
 
 export async function getMedicineLog(id: string): Promise<MedicineLogResponse> {
   requireAuth();
-  return get<MedicineLogResponse>(`/api/medicine-log/${id}`);
+  return get<MedicineLogResponse>('/api/medicine-log', { id });
 }
 
 export async function createMedicineLog(data: MedicineLogCreate): Promise<MedicineLogResponse> {
@@ -430,7 +430,7 @@ export async function getCaretakers(): Promise<CaretakerResponse[]> {
 
 export async function getCaretaker(id: string): Promise<CaretakerResponse> {
   requireAuth();
-  return get<CaretakerResponse>(`/api/caretaker/${id}`);
+  return get<CaretakerResponse>('/api/caretaker', { id });
 }
 
 export async function createCaretaker(data: CaretakerCreate): Promise<CaretakerResponse> {
@@ -459,7 +459,7 @@ export async function getContacts(params?: { role?: string }): Promise<ContactRe
 
 export async function getContact(id: string): Promise<ContactResponse> {
   requireAuth();
-  return get<ContactResponse>(`/api/contact/${id}`);
+  return get<ContactResponse>('/api/contact', { id });
 }
 
 export async function createContact(data: ContactCreate): Promise<ContactResponse> {
@@ -492,7 +492,7 @@ export async function getCalendarEvents(params?: {
 
 export async function getCalendarEvent(id: string): Promise<CalendarEventResponse> {
   requireAuth();
-  return get<CalendarEventResponse>(`/api/calendar/${id}`);
+  return get<CalendarEventResponse>('/api/calendar', { id });
 }
 
 export async function createCalendarEvent(data: CalendarEventCreate): Promise<CalendarEventResponse> {

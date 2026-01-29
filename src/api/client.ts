@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import { getServer, getToken, isTokenExpired } from '../config/store.js';
 import { AuthError, ConfigError, ApiError, isAxiosError } from '../utils/errors.js';
+import { debug } from '../utils/logger.js';
 import type { ApiResponse } from '../types/index.js';
 
 let clientInstance: AxiosInstance | null = null;
@@ -14,6 +15,8 @@ export function getClient(): AxiosInstance {
   }
 
   const server = getServer();
+  debug.api('Server URL: %s', server || '(not configured)');
+
   if (!server) {
     throw new ConfigError();
   }
@@ -29,16 +32,31 @@ export function getClient(): AxiosInstance {
   // Request interceptor to add auth token
   clientInstance.interceptors.request.use(config => {
     const token = getToken();
+    debug.api('%s %s', config.method?.toUpperCase(), config.url);
+    if (config.params) {
+      debug.api('  Query params: %O', config.params);
+    }
+    if (config.data) {
+      debug.api('  Request body: %O', config.data);
+    }
     if (token) {
+      debug.auth('Using auth token: %s...', token.substring(0, 20));
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      debug.auth('No auth token available');
     }
     return config;
   });
 
   // Response interceptor for error handling
   clientInstance.interceptors.response.use(
-    response => response,
+    response => {
+      debug.api('Response %d: %O', response.status, response.data);
+      return response;
+    },
     (error: AxiosError) => {
+      debug.api('Error response: %d %s', error.response?.status, error.message);
+      debug.api('Error data: %O', error.response?.data);
       if (error.response?.status === 401) {
         throw new AuthError('Authentication failed or expired. Please run: sprout-track auth login');
       }
@@ -61,6 +79,7 @@ export function resetClient(): void {
  */
 export function requireAuth(): void {
   const token = getToken();
+  debug.auth('Checking auth - token exists: %s, expired: %s', !!token, isTokenExpired());
   if (!token) {
     throw new AuthError();
   }
