@@ -6,7 +6,7 @@ import {
   updateFeedLog,
   deleteFeedLog,
 } from '../api/endpoints.js';
-import { getDefaultBabyId } from '../config/store.js';
+import { getDefaultBabyId, getDefaultBottleUnit, getDefaultSolidsUnit } from '../config/store.js';
 import { success, error, spinner, output, type TableColumn } from '../output/index.js';
 import { formatDate, now, formatDurationSeconds } from '../utils/date.js';
 import {
@@ -268,7 +268,7 @@ export function registerFeedCommands(program: Command): void {
     .description('Quick log bottle feeding')
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--amount <amount>', 'Amount')
-    .option('--unit <unit>', 'Unit (OZ, ML, default: OZ)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--type <type>', 'Bottle type (formula, breast milk, etc.)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
@@ -284,19 +284,20 @@ export function registerFeedCommands(program: Command): void {
 
       try {
         const babyId = getBabyId(opts);
+        const unit = opts.unit || getDefaultBottleUnit();
         const data: FeedLogCreate = {
           babyId,
           time: now(),
           type: 'BOTTLE',
           amount: optionalNumber(opts.amount),
-          unitAbbr: opts.unit || 'OZ',
+          unitAbbr: unit,
         };
 
         if (opts.type) data.bottleType = opts.type;
         if (opts.notes) data.notes = opts.notes;
 
         const log = await createFeedLog(data);
-        spin.succeed(`Bottle feeding logged (${opts.amount} ${data.unitAbbr})`);
+        spin.succeed(`Bottle feeding logged (${opts.amount} ${unit})`);
 
         const format = opts.output ? validateOutputFormat(opts.output) : undefined;
 
@@ -317,7 +318,7 @@ export function registerFeedCommands(program: Command): void {
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--food <description>', 'Food description')
     .option('--amount <amount>', 'Amount')
-    .option('--unit <unit>', 'Unit (TBSP, etc.)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
     .action(async (opts: {
@@ -339,8 +340,10 @@ export function registerFeedCommands(program: Command): void {
           food: opts.food,
         };
 
-        if (opts.amount) data.amount = optionalNumber(opts.amount);
-        if (opts.unit) data.unitAbbr = opts.unit;
+        if (opts.amount) {
+          data.amount = optionalNumber(opts.amount);
+          data.unitAbbr = opts.unit || getDefaultSolidsUnit();
+        }
         if (opts.notes) data.notes = opts.notes;
 
         const log = await createFeedLog(data);

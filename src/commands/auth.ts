@@ -6,14 +6,32 @@ import {
   getFamilySlug,
   setFamilySlug,
   clearFamilySlug,
+  clearCachedSettings,
+  setCachedSettings,
   isTokenExpired,
   getServer,
 } from '../config/store.js';
-import { authWithPin, authWithAccount, refreshToken } from '../api/endpoints.js';
+import { authWithPin, authWithAccount, refreshToken, getSettings } from '../api/endpoints.js';
 import { success, error, info, spinner, output } from '../output/index.js';
 import { validatePin, validateEmail, validateOutputFormat } from '../utils/validation.js';
 import { formatError, ConfigError } from '../utils/errors.js';
 import type { OutputFormat } from '../types/index.js';
+
+// Helper to fetch and cache settings after login
+async function fetchAndCacheSettings(): Promise<void> {
+  try {
+    const settings = await getSettings();
+    setCachedSettings({
+      defaultBottleUnit: settings.defaultBottleUnit,
+      defaultSolidsUnit: settings.defaultSolidsUnit,
+      defaultHeightUnit: settings.defaultHeightUnit,
+      defaultWeightUnit: settings.defaultWeightUnit,
+      defaultTempUnit: settings.defaultTempUnit,
+    });
+  } catch {
+    // Silently fail - settings will use fallback defaults
+  }
+}
 
 export function registerAuthCommands(program: Command): void {
   const auth = program
@@ -114,6 +132,9 @@ export function registerAuthCommands(program: Command): void {
           setFamilySlug(familySlug);
           info(`Family: ${familySlug}`);
         }
+
+        // Fetch and cache settings for default units
+        await fetchAndCacheSettings();
       } catch (err) {
         spin.fail('Authentication failed');
         error(formatError(err));
@@ -127,6 +148,7 @@ export function registerAuthCommands(program: Command): void {
     .action(() => {
       clearToken();
       clearFamilySlug();
+      clearCachedSettings();
       success('Logged out successfully');
     });
 

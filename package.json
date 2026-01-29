@@ -1,6 +1,6 @@
 {
   "name": "sprout-track-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Command-line interface for Sprout-Track baby tracking application",
   "type": "module",
   "main": "dist/index.js",

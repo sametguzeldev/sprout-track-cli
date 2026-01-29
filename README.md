@@ -38,7 +38,7 @@ npx sprout-track-cli <command>
 
 4. **Start logging activities:**
    ```bash
-   # Quick log a bottle feed
+   # Quick log a bottle feed (uses your server's default unit)
    sprout-track feed log bottle --amount 4
 
    # Log a diaper change
@@ -50,6 +50,27 @@ npx sprout-track-cli <command>
    # View timeline
    sprout-track timeline
    ```
+
+## Default Units
+
+The CLI automatically uses your server's default unit settings for measurements and feeding. These are cached locally after login:
+
+- **Bottle feeding**: Uses `defaultBottleUnit` (e.g., OZ, ML)
+- **Solid feeding**: Uses `defaultSolidsUnit` (e.g., TBSP, G)
+- **Height/Head**: Uses `defaultHeightUnit` (e.g., IN, CM)
+- **Weight**: Uses `defaultWeightUnit` (e.g., LB, KG, G)
+- **Temperature**: Uses `defaultTempUnit` (e.g., F, C)
+
+You can always override with `--unit`:
+```bash
+sprout-track feed log bottle --amount 120 --unit ML
+sprout-track measurement log weight --value 3500 --unit G
+```
+
+To refresh cached settings:
+```bash
+sprout-track settings refresh
+```
 
 ## Commands
 

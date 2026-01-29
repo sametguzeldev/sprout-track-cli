@@ -1,5 +1,5 @@
 import Conf from 'conf';
-import type { CliConfig, OutputFormat } from '../types/index.js';
+import type { CliConfig, OutputFormat, CachedSettings } from '../types/index.js';
 
 const CONFIG_DEFAULTS: CliConfig = {
   server: '',
@@ -96,4 +96,41 @@ export function resetConfig(): void {
 
 export function getConfigPath(): string {
   return config.path;
+}
+
+// Cached settings functions
+export function getCachedSettings(): CachedSettings | undefined {
+  return config.get('cachedSettings') as CachedSettings | undefined;
+}
+
+export function setCachedSettings(settings: Omit<CachedSettings, 'cachedAt'>): void {
+  config.set('cachedSettings', {
+    ...settings,
+    cachedAt: new Date().toISOString(),
+  });
+}
+
+export function clearCachedSettings(): void {
+  config.delete('cachedSettings');
+}
+
+// Convenience functions for getting default units
+export function getDefaultBottleUnit(): string {
+  return getCachedSettings()?.defaultBottleUnit || 'OZ';
+}
+
+export function getDefaultSolidsUnit(): string {
+  return getCachedSettings()?.defaultSolidsUnit || 'TBSP';
+}
+
+export function getDefaultHeightUnit(): string {
+  return getCachedSettings()?.defaultHeightUnit || 'IN';
+}
+
+export function getDefaultWeightUnit(): string {
+  return getCachedSettings()?.defaultWeightUnit || 'LB';
+}
+
+export function getDefaultTempUnit(): string {
+  return getCachedSettings()?.defaultTempUnit || 'F';
 }

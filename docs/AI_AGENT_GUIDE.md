@@ -32,6 +32,31 @@ sprout-track config set-output json
 
 # Set default baby to reduce command verbosity
 sprout-track baby select <baby-id>
+
+# Check cached settings to know default units
+sprout-track settings cached --output json
+```
+
+### Default Units
+
+The CLI caches the server's default unit preferences after login. Commands automatically use these defaults:
+
+| Setting | Used By | Examples |
+|---------|---------|----------|
+| `defaultBottleUnit` | `feed log bottle` | OZ, ML |
+| `defaultSolidsUnit` | `feed log solids` | TBSP, G |
+| `defaultHeightUnit` | `measurement log height/head` | IN, CM |
+| `defaultWeightUnit` | `measurement log weight` | LB, KG, G |
+| `defaultTempUnit` | `measurement log temp` | F, C |
+
+To refresh cached settings:
+```bash
+sprout-track settings refresh
+```
+
+To override the default unit in any command:
+```bash
+sprout-track feed log bottle --amount 120 --unit ML
 ```
 
 ## Command Patterns

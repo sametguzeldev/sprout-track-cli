@@ -18,6 +18,16 @@ export interface ApiResponse<T = void> {
   error?: string;
 }
 
+// Cached settings from server
+export interface CachedSettings {
+  defaultBottleUnit: string;
+  defaultSolidsUnit: string;
+  defaultHeightUnit: string;
+  defaultWeightUnit: string;
+  defaultTempUnit: string;
+  cachedAt: string;
+}
+
 // Config types
 export interface CliConfig {
   server: string;
@@ -26,6 +36,7 @@ export interface CliConfig {
   familySlug?: string;
   defaultBabyId?: string;
   outputFormat: 'json' | 'table' | 'plain';
+  cachedSettings?: CachedSettings;
 }
 
 // Auth types

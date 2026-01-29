@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2024-01-29
+
+### Added
+
+- Cache server settings locally after login
+- Use server default units for measurements and feeding:
+  - Bottle feeding uses `defaultBottleUnit` from server
+  - Solid feeding uses `defaultSolidsUnit` from server
+  - Height/head measurements use `defaultHeightUnit` from server
+  - Weight measurements use `defaultWeightUnit` from server
+  - Temperature measurements use `defaultTempUnit` from server
+- New `settings refresh` command to manually refresh cached settings
+- New `settings cached` command to view locally cached settings
+
+### Changed
+
+- Unit options in commands now show "uses server default if not specified"
+- Settings are automatically cached on login
+- Settings are cleared on logout
+
+## [1.0.2] - 2024-01-29
+
+### Fixed
+
+- Read version dynamically from package.json instead of hardcoded value
+
+## [1.0.1] - 2024-01-29
+
+### Fixed
+
+- Corrected repository URL in package.json
+
 ## [1.0.0] - 2024-01-29
 
 ### Added

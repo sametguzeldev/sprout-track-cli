@@ -6,7 +6,7 @@ import {
   updateMeasurement,
   deleteMeasurement,
 } from '../api/endpoints.js';
-import { getDefaultBabyId } from '../config/store.js';
+import { getDefaultBabyId, getDefaultHeightUnit, getDefaultWeightUnit, getDefaultTempUnit } from '../config/store.js';
 import { success, error, spinner, output, type TableColumn } from '../output/index.js';
 import { formatDate, toDateOnly } from '../utils/date.js';
 import {
@@ -170,7 +170,7 @@ export function registerMeasurementCommands(program: Command): void {
     .description('Quick log height measurement')
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--value <value>', 'Height value')
-    .option('--unit <unit>', 'Unit (IN, CM, default: IN)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--date <date>', 'Date (YYYY-MM-DD, default: today)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
@@ -186,7 +186,7 @@ export function registerMeasurementCommands(program: Command): void {
 
       try {
         const babyId = getBabyId(opts);
-        const unit = opts.unit?.toUpperCase() || 'IN';
+        const unit = opts.unit?.toUpperCase() || getDefaultHeightUnit();
         const data: MeasurementCreate = {
           babyId,
           date: opts.date || getTodayDate(),
@@ -218,7 +218,7 @@ export function registerMeasurementCommands(program: Command): void {
     .description('Quick log weight measurement')
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--value <value>', 'Weight value')
-    .option('--unit <unit>', 'Unit (LB, KG, default: LB)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--date <date>', 'Date (YYYY-MM-DD, default: today)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
@@ -234,7 +234,7 @@ export function registerMeasurementCommands(program: Command): void {
 
       try {
         const babyId = getBabyId(opts);
-        const unit = opts.unit?.toUpperCase() || 'LB';
+        const unit = opts.unit?.toUpperCase() || getDefaultWeightUnit();
         const data: MeasurementCreate = {
           babyId,
           date: opts.date || getTodayDate(),
@@ -266,7 +266,7 @@ export function registerMeasurementCommands(program: Command): void {
     .description('Quick log head circumference measurement')
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--value <value>', 'Measurement value')
-    .option('--unit <unit>', 'Unit (IN, CM, default: IN)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--date <date>', 'Date (YYYY-MM-DD, default: today)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
@@ -282,7 +282,7 @@ export function registerMeasurementCommands(program: Command): void {
 
       try {
         const babyId = getBabyId(opts);
-        const unit = opts.unit?.toUpperCase() || 'IN';
+        const unit = opts.unit?.toUpperCase() || getDefaultHeightUnit();
         const data: MeasurementCreate = {
           babyId,
           date: opts.date || getTodayDate(),
@@ -314,7 +314,7 @@ export function registerMeasurementCommands(program: Command): void {
     .description('Quick log temperature measurement')
     .option('-b, --baby <id>', 'Baby ID (uses default if not specified)')
     .requiredOption('--value <value>', 'Temperature value')
-    .option('--unit <unit>', 'Unit (F, C, default: F)')
+    .option('--unit <unit>', 'Unit (uses server default if not specified)')
     .option('--date <date>', 'Date (YYYY-MM-DD, default: today)')
     .option('--notes <text>', 'Notes')
     .option('-o, --output <format>', 'Output format (json, table, plain)')
@@ -330,7 +330,7 @@ export function registerMeasurementCommands(program: Command): void {
 
       try {
         const babyId = getBabyId(opts);
-        const unit = opts.unit?.toUpperCase() || 'F';
+        const unit = opts.unit?.toUpperCase() || getDefaultTempUnit();
         const data: MeasurementCreate = {
           babyId,
           date: opts.date || getTodayDate(),

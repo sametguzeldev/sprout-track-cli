@@ -1,10 +1,22 @@
 import { Command } from 'commander';
 import { getSettings, updateSettings } from '../api/endpoints.js';
-import { success, error, spinner, output } from '../output/index.js';
+import { setCachedSettings, getCachedSettings } from '../config/store.js';
+import { success, error, info, spinner, output } from '../output/index.js';
 import { formatDate } from '../utils/date.js';
 import { validateOutputFormat } from '../utils/validation.js';
 import { formatError } from '../utils/errors.js';
-import type { OutputFormat, SettingsUpdate } from '../types/index.js';
+import type { OutputFormat, SettingsUpdate, SettingsResponse } from '../types/index.js';
+
+// Helper to cache settings locally
+function cacheSettingsLocally(settings: SettingsResponse): void {
+  setCachedSettings({
+    defaultBottleUnit: settings.defaultBottleUnit,
+    defaultSolidsUnit: settings.defaultSolidsUnit,
+    defaultHeightUnit: settings.defaultHeightUnit,
+    defaultWeightUnit: settings.defaultWeightUnit,
+    defaultTempUnit: settings.defaultTempUnit,
+  });
+}
 
 const settingsFields = [
   { key: 'id', label: 'ID' },
@@ -85,6 +97,7 @@ export function registerSettingsCommands(program: Command): void {
         }
 
         const s = await updateSettings(data);
+        cacheSettingsLocally(s);
         spin.succeed('Settings updated');
 
         const format = opts.output ? validateOutputFormat(opts.output) : undefined;
@@ -98,5 +111,55 @@ export function registerSettingsCommands(program: Command): void {
         error(formatError(err));
         process.exit(1);
       }
+    });
+
+  settings
+    .command('refresh')
+    .description('Refresh cached settings from server')
+    .action(async () => {
+      const spin = spinner('Refreshing settings...');
+
+      try {
+        const s = await getSettings();
+        cacheSettingsLocally(s);
+        spin.succeed('Settings refreshed and cached locally');
+
+        info(`Bottle unit: ${s.defaultBottleUnit}`);
+        info(`Solids unit: ${s.defaultSolidsUnit}`);
+        info(`Height unit: ${s.defaultHeightUnit}`);
+        info(`Weight unit: ${s.defaultWeightUnit}`);
+        info(`Temperature unit: ${s.defaultTempUnit}`);
+      } catch (err) {
+        spin.fail('Failed to refresh settings');
+        error(formatError(err));
+        process.exit(1);
+      }
+    });
+
+  settings
+    .command('cached')
+    .description('Show locally cached settings')
+    .option('-o, --output <format>', 'Output format (json, table, plain)')
+    .action((opts: { output?: string }) => {
+      const cached = getCachedSettings();
+
+      if (!cached) {
+        info('No cached settings. Run: sprout-track settings refresh');
+        return;
+      }
+
+      const format = opts.output ? validateOutputFormat(opts.output) : undefined;
+
+      output(cached, {
+        format: format as OutputFormat,
+        fields: [
+          { key: 'defaultBottleUnit', label: 'Bottle Unit' },
+          { key: 'defaultSolidsUnit', label: 'Solids Unit' },
+          { key: 'defaultHeightUnit', label: 'Height Unit' },
+          { key: 'defaultWeightUnit', label: 'Weight Unit' },
+          { key: 'defaultTempUnit', label: 'Temperature Unit' },
+          { key: 'cachedAt', label: 'Cached At', formatter: (v: unknown) => formatDate(v as string) },
+        ],
+      });
     });
 }
