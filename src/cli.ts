@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Read version from package.json
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
+const version = packageJson.version;
 import { registerConfigCommands } from './commands/config.js';
 import { registerAuthCommands } from './commands/auth.js';
 import { registerBabyCommands } from './commands/baby.js';
@@ -30,7 +39,7 @@ const program = new Command();
 program
   .name('sprout-track')
   .description('Command-line interface for Sprout-Track baby tracking')
-  .version('1.0.0')
+  .version(version)
   .option('-v, --verbose', 'Enable verbose debug output')
   .hook('preAction', (thisCommand) => {
     const opts = thisCommand.opts();
