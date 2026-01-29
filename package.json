@@ -31,7 +31,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Oak-and-Sprout/sprout-track-cli"
+    "url": "https://github.com/sametguzeldev/sprout-track-cli"
   },
   "engines": {
     "node": ">=18.0.0"
